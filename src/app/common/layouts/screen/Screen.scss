@@ -1,0 +1,22 @@
+@import 'src/styles/variables';
+
+.multiple--screen {
+  height: 100vh;
+  background-image: url('../../../../media/bg-chat.png');
+  background-color: #eae6df;
+  background-repeat: repeat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .screen-title {
+    margin: 30px 0 60px 0;
+    font-weight: 600;
+    color: $primary-color;
+    font-size: 1.5rem;
+  }
+
+  .multiple--container {
+    flex: 1;
+  }
+}
