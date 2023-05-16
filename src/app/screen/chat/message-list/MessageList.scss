@@ -1,0 +1,10 @@
+.single--message-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  justify-content: flex-end;
+
+  .message-empty {
+
+  }
+}

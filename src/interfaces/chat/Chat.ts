@@ -3,6 +3,11 @@ export enum EChatMessageType {
   Incoming = 'incoming',
 }
 
+export enum ETypeWebhook {
+  IncomingMessageReceived = 'incomingMessageReceived',
+  OutgoingMessageReceived = 'outgoingMessageReceived',
+}
+
 export interface ChatMessage {
   idMessage?: string;
   type: EChatMessageType;

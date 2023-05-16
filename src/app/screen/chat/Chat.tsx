@@ -13,8 +13,7 @@ import { PageSpinner } from '../../common/page-spinner/PageSpinner';
 import { useForm } from 'react-hook-form';
 import { Input } from '../../common/input/Input';
 import { Button } from '../../common/button/Button';
-import { mergeClasses } from '../../../utils/classnames';
-import { getTimeFromTimestamp } from '../../../utils/date';
+import { MessageList } from './message-list/MessageList';
 
 interface IChatForm {
   message: string;
@@ -23,8 +22,8 @@ interface IChatForm {
 export const Chat: FC = () => {
   const { chatPhone } = useParams<{ chatPhone: string }>();
   const messageList = useChatStore((state) => state.messageList);
-  const messageSendStatus = useChatStore((state) => state.messageSendStatus);
   const chatStatus = useChatStore((state) => state.chatStatus);
+  const messageSendStatus = useChatStore((state) => state.messageSendStatus);
   const clearMessageList = useChatStore((state) => state.clearMessageList);
 
   const { register, handleSubmit, reset, watch } = useForm<IChatForm>();
@@ -32,9 +31,9 @@ export const Chat: FC = () => {
   const isLoadingChat = chatStatus === 'loading';
   const isLoadingMessageSend = messageSendStatus === 'loading';
 
-  const message = watch('message');
-
   const navigate = useNavigate();
+
+  const currentMessage = watch('message');
 
   useEffect(() => {
     if (chatPhone != null) {
@@ -86,39 +85,11 @@ export const Chat: FC = () => {
       <div className={'chat-list-scrollable'}>
         <div ref={scrollContainerRef} className={'chat-list-wrap'}>
           {messageList.length > 0 && (
-            <ul className={'chat-list'}>
-              {messageList
-                .filter((message) => message.idMessage != null)
-                .sort((a, b) => {
-                  if (a.timestamp > b.timestamp) {
-                    return 1;
-                  } else {
-                    return -1;
-                  }
-                })
-                .map((message) => {
-                  return (
-                    <li
-                      className={mergeClasses('chat-item', message.type)}
-                      key={message.idMessage}
-                    >
-                      {message.textMessage}
-                      <time>
-                        {getTimeFromTimestamp(message.timestamp * 1000)}
-                      </time>
-                    </li>
-                  );
-                })}
-              {isLoadingMessageSend && (
-                <li
-                  className={'chat-item loading outgoing'}
-                  key={'__sending-message__'}
-                >
-                  {message}
-                  <time>{getTimeFromTimestamp(Date.now())}</time>
-                </li>
-              )}
-            </ul>
+            <MessageList
+              className={'chat-message-list'}
+              messageList={messageList}
+              currentMessage={currentMessage}
+            />
           )}
           {messageList.length === 0 && !isLoadingChat && (
             <span className={'chat-empty'}>
@@ -136,9 +107,13 @@ export const Chat: FC = () => {
             placeholder={'Введите сообщение'}
             autoComplete="off"
             className={'chat-footer-input'}
+            disableOnChange={isLoadingMessageSend}
+            autoFocus={true}
             {...register('message', { required: true })}
           />
-          <Button colorType={'secondary'}>Отправить</Button>
+          <Button colorType={'secondary'} disabled={isLoadingMessageSend}>
+            Отправить
+          </Button>
         </form>
       </footer>
     </Screen>

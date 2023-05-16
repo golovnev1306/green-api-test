@@ -19,50 +19,14 @@
     }
   }
 
-  .chat-empty {
-    color: $secondary-text-color;
-  }
-
-  .chat-list {
+  .chat-message-list {
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    justify-content: flex-end;
     max-width: 700px;
     margin: 0 auto;
   }
 
-  .chat-item {
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 1px 0.5px $shadow-rgba;
-    display: flex;
-    gap: 10px;
-    max-width: 70%;
-
-    &.outgoing {
-      align-self: flex-end;
-      background-color: $outgoing-background-color;
-      text-align: right;
-    }
-
-    &.incoming {
-      align-self: flex-start;
-      background-color: $incoming-bg-color;
-      text-align: left;
-    }
-
-    time {
-      font-size: 0.7rem;
-      align-self: flex-end;
-      margin-bottom: -5px;
-      color: $secondary-text-color;
-    }
-
-    &.loading {
-      opacity: .5;
-    }
+  .chat-empty {
+    color: $secondary-text-color;
   }
 
   .chat-header {

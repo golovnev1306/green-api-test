@@ -8,3 +8,11 @@ export const getTimeFromTimestamp = (timestamp: number) => {
 
   return hours + ':' + minutes;
 };
+
+export const toServerTimestamp = (clientTimestamp: number) => {
+  return clientTimestamp / 1000;
+};
+
+export const toClientTimestamp = (serverTimestamp: number) => {
+  return serverTimestamp * 1000;
+};

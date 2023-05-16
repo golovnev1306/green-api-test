@@ -1,5 +1,5 @@
 import { getUrlWithInstanceData, request } from '../index';
-import { EChatMessageType } from '../../interfaces/chat/Chat';
+import { EChatMessageType, ETypeWebhook } from '../../interfaces/chat/Chat';
 
 interface ChatMessageDto {
   idMessage: string;
@@ -16,7 +16,7 @@ interface SendMessageRes {
 interface IReceiveNotificationRes {
   receiptId: string;
   body: {
-    typeWebhook: 'incomingMessageReceived';
+    typeWebhook: ETypeWebhook;
     timestamp: number;
     idMessage: string;
     messageData: {

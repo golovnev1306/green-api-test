@@ -1,7 +1,12 @@
 import { chatStore } from './chatStore';
 import { storeApiHandler } from '../_utils/storeApiHandler';
 import { chatService } from '../../transport/services/chatService';
-import { ChatMessage, EChatMessageType } from '../../interfaces/chat/Chat';
+import {
+  ChatMessage,
+  EChatMessageType,
+  ETypeWebhook,
+} from '../../interfaces/chat/Chat';
+import { toServerTimestamp } from '../../utils/date';
 
 export const getChatHistory = (phone: string) => {
   const result = chatService.getChatHistory(phone);
@@ -28,7 +33,7 @@ export const sendChatMessage = (phone: string, message: string) => {
         {
           idMessage: responseData.data.idMessage,
           textMessage: message,
-          timestamp: Date.now() / 1000,
+          timestamp: toServerTimestamp(Date.now()),
           type: EChatMessageType.Outgoing,
         },
         ...chatStore.getState().messageList,
@@ -54,14 +59,27 @@ const receiveNotification = () => {
         ) {
           const messageList = chatStore.getState().messageList;
           const respMessageBody = resData.body;
-          if (respMessageBody.typeWebhook === 'incomingMessageReceived') {
+          let addingMessageType: EChatMessageType | null = null;
+
+          switch (respMessageBody.typeWebhook) {
+            case ETypeWebhook.IncomingMessageReceived: {
+              addingMessageType = EChatMessageType.Incoming;
+              break;
+            }
+            case ETypeWebhook.OutgoingMessageReceived: {
+              addingMessageType = EChatMessageType.Outgoing;
+              break;
+            }
+          }
+
+          if (addingMessageType != null) {
             chatStore.setState({
               messageList: [
                 {
                   idMessage: respMessageBody.idMessage,
                   textMessage:
                     respMessageBody.messageData.textMessageData.textMessage,
-                  type: EChatMessageType.Incoming,
+                  type: addingMessageType,
                   timestamp: respMessageBody.timestamp,
                 },
                 ...messageList,
